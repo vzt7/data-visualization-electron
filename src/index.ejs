@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>scuec-visual-app</title>
+    <!-- Antv / L7 -->
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.l7-1.0.0/dist/l7.min.js" async></script>
+    <!-- 高德地图API -->
+    <script src="https://webapi.amap.com/maps?v=1.4.8&key=4dc3c9dcd439ce9dad1207fd04196061&plugin=Map3D" async></script>
+    <!-- turf -->
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js" async></script>
+    <% if (htmlWebpackPlugin.options.nodeModules) { %>
+      <!-- Add `node_modules/` to global paths so `require` works properly in development -->
+      <script>
+        require('module').globalPaths.push('<%= htmlWebpackPlugin.options.nodeModules.replace(/\\/g, '\\\\') %>')
+      </script>
+    <% } %>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- Set `__static` path to static files in production -->
+    <% if (!process.browser) { %>
+      <script>
+        if (process.env.NODE_ENV !== 'development') window.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+      </script>
+    <% } %>
+
+    <!-- webpack builds are automatically injected -->
+  </body>
+</html>
