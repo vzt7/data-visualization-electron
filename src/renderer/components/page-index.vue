@@ -6,7 +6,7 @@
         Data<span class="index__title-force"><span class="text-offset">V</span>isuali<span class="text-offset">z</span>a<span class="text-offset">t</span>ion</span> of SCUEC
       </p>
       <Upload
-        v-if="scriptLoaded && scriptLoadAnimatedPercent >= 100"
+        v-if="onLoaded && loadPercent >= 100"
         class="index__selector"
         :before-upload="handleSelect"
         :show-upload-list="false"
@@ -22,7 +22,7 @@
           ghost
         >{{ file !== null ? `已选择：${file.name}` : '选择你的 .csv 文件'}}</Button>
       </Upload>
-      <p v-else class="index__loading">{{ '外部依赖加载中... ' + scriptLoadAnimatedPercent + '%' }}</p>
+      <p v-else class="index__loading">{{ '外部依赖加载中... ' + loadPercent + '%' }}</p>
     </div>
   </div>
 </template>
@@ -38,34 +38,23 @@ export default {
     return {
       file: null,
       loadingStatus: false,
-      scriptLoadPercent: 0,
-      scriptLoadAnimatedPercent: 0,
+      onLoaded: false,
+      loadPercent: 0,
     };
   },
-  mounted() {
-  },
-  computed: {
-    scriptLoaded() {
-      // AMAP, L7, turf 依赖从外部引入 (index.html / script标签)
-      let num = 0;
-      if(window.AMap) num ++;
-      if(window.L7) num ++;
-      if(window.turf) num ++;
-      this.scriptLoadPercent = ~~(num / 3 * 100);
-      return num === 3;
-    }
-  },
-  watch: {
-    scriptLoadPercent(newVal, oldVal) {
-      // 实现加载百分比动画效果
+  created() {
+    window.onload = () => {
+      this.onLoaded = true;
       let fn = () => {
-        if(this.scriptLoadAnimatedPercent < this.scriptLoadPercent) {
-          this.scriptLoadAnimatedPercent ++;
+        if(this.loadPercent < 100) {
+          this.loadPercent ++;
           window.requestAnimationFrame(fn);
         }
       }
-      if(oldVal === this.scriptLoadAnimatedPercent) window.requestAnimationFrame(fn);
+      window.requestAnimationFrame(fn);
     }
+  },
+  computed: {
   },
   methods: {
     handleSelect(file) {
