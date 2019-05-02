@@ -4,43 +4,43 @@
     <div class="content">
       <router-view></router-view>
     </div>
-    <footer class="footer" v-if="this.$route.path === '/'">
-      <p>Front-End Tech Stack & Lib includes Webpack, Vue.js, G2, L7, iView and so on</p>
-      <p>© Copyright 2019 , Hubei Wuhan , xxx .</p>
-    </footer>
+    <common-footer></common-footer>
   </div>
 </template>
 
 <script>
 import Throttle from "lodash.throttle";
-
 import Header from "./components/common/header";
+import Footer from "./components/common/footer";
+
+import data from './config/data.conf.js';
 
 export default {
   name: "app",
   components: {
-    "common-header": Header
+    "common-header": Header,
+    "common-footer": Footer,
   },
   data() {
     return {};
   },
-  mounted() {
-    // this.addBaseEvent();
-  },
-  computed: {
-    isReaded() {
-      return this.$store.state.csvData !== null;
-    }
+  created() {
+    this.getData();
   },
   methods: {
-    addBaseEvent() {
-      this.$refs.app.addEventListener(
-        "mousemove",
-        Throttle(e => {
-          this.showHeader = e.y < 60;
-        }, 200)
-      );
-    }
+    getData() {
+      this.$Notice.info({
+        title: "等待",
+        desc: `加载数据中`
+      });
+      // 读取数据，数据暂存在vuex
+      this.$store.commit("setStuData", Object.values(data.stuData))
+      this.$store.commit("setMapData", Object.values(data.mapData))
+      this.$Notice.success({
+        title: "成功",
+        desc: `已加载数据`
+      });
+    },
   }
 };
 </script>
@@ -53,7 +53,6 @@ html, body, #app {
   overflow: hidden;
 }
   
-
 #app {
   display: flex;
   flex-flow: column nowrap;
@@ -64,7 +63,6 @@ html, body, #app {
 .header {
   flex: 0 0 auto;
 }
-  
 
 .content {
   flex: 1 0 400px;
@@ -72,14 +70,6 @@ html, body, #app {
 
 .footer {
   flex: 0 0 auto;
-  &>p {
-    padding: 30px 0;
-    &:last-child {
-      padding: 0 0 30px 0;
-    }
-    text-align: center;
-    background-color: #f4f5f5;
-  }
 }
   
 </style>

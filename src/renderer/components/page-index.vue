@@ -5,50 +5,29 @@
       <p class="index__title">
         Data<span class="index__title-force"><span class="text-offset">V</span>isuali<span class="text-offset">z</span>a<span class="text-offset">t</span>ion</span> of SCUEC
       </p>
-      <Upload
-        v-if="onLoaded && loadPercent >= 100"
-        class="index__selector"
-        :before-upload="handleSelect"
-        :show-upload-list="false"
-        :format="['csv']"
-        :on-format-error="handleFormatError"
-        accept="file"
-        action="//"
-      >
-        <Button
-          class="index__btn"
-          icon="md-analytics"
-          size="large"
-          ghost
-        >{{ file !== null ? `已选择：${file.name}` : '选择你的 .csv 文件'}}</Button>
-      </Upload>
-      <p v-else class="index__loading">{{ '外部依赖加载中... ' + loadPercent + '%' }}</p>
+      <p class="index__loading">{{ '外部依赖加载中... ' + loadPercent + '%' }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import csvToJsObject from "../lib/csv-to-js-object.js";
-import { setTimeout } from 'timers';
-
 export default {
   name: "page-index",
   props: {},
   data() {
     return {
-      file: null,
-      loadingStatus: false,
       onLoaded: false,
       loadPercent: 0,
     };
   },
   created() {
     window.onload = () => {
-      this.onLoaded = true;
       let fn = () => {
         if(this.loadPercent < 100) {
           this.loadPercent ++;
           window.requestAnimationFrame(fn);
+        } else {
+          this.onLoaded = true;
         }
       }
       window.requestAnimationFrame(fn);
@@ -57,48 +36,6 @@ export default {
   computed: {
   },
   methods: {
-    handleSelect(file) {
-      // 只允许选择 csv 格式的文件
-      if (file.name.split(".").pop() !== "csv") this.handleFormatError(file);
-      else {
-        this.file = file;
-        this.read();
-      }
-      return false;
-    },
-    handleFormatError(file) {
-      this.$Notice.warning({
-        title: "文件格式错误",
-        desc: "你所选择的 " + file.name + " 不是 .csv 格式，请重试"
-      });
-    },
-    async read() {
-      // 这里是获取csv里数据的过程，不上传，数据暂存在vuex
-      this.loadingStatus = true;
-
-      // 读取 csv 文件并转为 js对象，存入store
-      await this.readCsv(this.file)
-        .then(data => this.getCsvAsJsObject(data))
-        .then(csvData => this.$store.dispatch("setCsvData", csvData));
-      this.loadingStatus = false;
-      this.$Notice.success({
-        title: "成功",
-        desc: `已从 ${this.file.name} 中读取数据`
-      });
-    },
-    readCsv(file) {
-      return new Promise((res, rej) => {
-        let reader = new FileReader();
-        reader.onload = event => {
-          // this.csv = new CSV(data);
-          res(event.target.result);
-        };
-        reader.readAsText(file, "gbk");
-      });
-    },
-    getCsvAsJsObject(csvText) {
-      return csvToJsObject(csvText);
-    }
   }
 };
 </script>
@@ -193,15 +130,15 @@ $button-border-color: #02b0e5;
       transform: translateY(0);
 
       &:nth-child(1) {
-        animation: wave--down 3s 0.7s infinite alternate;
+        animation: wave--down 4s 0.7s infinite alternate;
       }
 
       &:nth-child(2) {
-        animation: wave--up 4s 0.7s infinite alternate;
+        animation: wave--up 5s 0.7s infinite alternate;
       }
 
       &:nth-child(3) {
-        animation: wave--down 2s 0.7s ease-out infinite alternate;
+        animation: wave--down 3s 0.7s linear infinite alternate;
       }
 
       @keyframes wave--up {

@@ -1,5 +1,7 @@
 <template>
-  <div id="pie-container" ref="pieContainer"></div>
+  <div id="pie-container">
+    <div id="pie-container__sex" class="pie-section"></div>
+  </div>
 </template>
 
 <script>
@@ -10,38 +12,43 @@ export default {
   props: {},
   data() {
     return {
-      data: [
-        {
-          item: "test1",
-          count: 1,
-          percent: 44
-        },
-        {
-          item: "test2",
-          count: 5,
-          percent: 55
-        }
-      ]
+      presetData: [],
     };
   },
   created() {
-    this.getData();
   },
   mounted() {
-    this.setPie();
+    this.setPieOfSex();
+  },
+  computed: {
+    stuData() {
+      return this.$store.state.Common.stuData;
+    }
   },
   methods: {
-    getData() {
+    setPieOfSex() {
+      let data = [{
+        item: '男',
+        count: 0,
+        percent: 0,
+      }, {
+        item: '女',
+        count: 0,
+        percent: 0,
+      }];
+      this.stuData.map(stu => data[stu.xb].count++);
       
+      this.setPie(data, 'pie-container__sex');      
     },
-    setPie() {
-      const total = this.data.reduce((a, b) => a.count + b.count);
+    setPie(data, mountNode) {
+      const total = data.reduce((a, b) => a.count + b.count);
+      data.map(t => t.percent = t.count / total);
       const chart = new G2.Chart({
-        container: "pie-container",
+        container: mountNode,
         forceFit: true,
         animate: false
       });
-      chart.source(this.data);
+      chart.source(data);
       chart.coord("theta", {
         radius: 0.75,
         innerRadius: 0.6
@@ -63,7 +70,7 @@ export default {
         .color("item")
         .label("percent", {
           formatter: function formatter(val, item) {
-            return item.item + ": " + val;
+            return item.point.item + ": " + val;
           }
         })
         .tooltip("item*percent", function(item, percent) {
@@ -78,11 +85,21 @@ export default {
           stroke: "#fff"
         });
       chart.render();
-      interval.setSelected(this.data[0]);
+      // interval.setSelected(data[0]);
     }
   }
 };
 </script>
 
 <style lang="scss">
+
+#pie-container {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.pie-section {
+  flex: 1 0 50%;
+}
+
 </style>

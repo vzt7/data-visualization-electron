@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import provincePosArray from '../../lib/province-pos.js';
+import transFn from './transMapFromToData.js';
 
 /* eslint-disable */
 export default {
@@ -47,7 +47,7 @@ export default {
     };
   },
   async mounted() {
-    [this.stuFromObj, this.stuToObj, this.stuFromToArray] = await [...this.getFromToData()];
+    [this.stuFromObj, this.stuToObj, this.stuFromToArray] = [...this.getFromToData()];
     this.setMap();
     // this.setMapGuideChart(this.stuFromObj);
     // console.log(this.stuFromObj, this.stuToObj);
@@ -73,38 +73,7 @@ export default {
   },
   methods: {
     getFromToData() {
-      // 获取渲染数据
-
-      // 没有就业去向的
-      const stuFromObj = {};
-      // 有就业去向的
-      const stuFromToArray = [];
-      // 有就业去向的（groupby）
-      const stuToObj = {};
-      this.$store.state.Common.csvData.map(stu => {
-        let fromPos = provincePosArray.find(prov => stu.from && stu.from.includes(prov.name));
-        let toPos = provincePosArray.find(prov => stu.to && stu.to.includes(prov.name));
-        if(fromPos && !toPos) {
-          if(stuFromObj[fromPos.name]) stuFromObj[fromPos.name].count += 1;
-          else {
-            stuFromObj[fromPos.name] = { name: fromPos.name, count: 1 };
-            stuFromObj[fromPos.name].geoCoord = fromPos.geoCoord;
-          }
-        }
-        if(fromPos && toPos) {
-          stuFromToArray.push({
-            from: fromPos.geoCoord,
-            to: toPos.geoCoord,
-          });
-          if(stuToObj[toPos.name]) stuToObj[toPos.name].count += 1;
-          else {
-            stuToObj[toPos.name] = { name: toPos.name, count: 1 };
-            stuToObj[toPos.name].geoCoord = toPos.geoCoord;
-          }
-        }
-      });
-      this.$store.dispatch('setMapData', { stuFromObj, stuFromToArray });
-      return [stuFromObj, stuToObj, stuFromToArray];
+      return transFn.call(this);
     },
     setMap() {
       // L7 和 turf 等地图相关依赖从 index.html / script标签 引入
@@ -202,7 +171,7 @@ export default {
         }).render();
     },
     setMapPolygons(scene, stuObj, polygonsColorArr) {
-      let mapObj = require('../../lib/china-pos.json');
+      let mapObj = require('../../../lib/china-pos.json');
       let geoObj = {
         'type': 'FeatureCollection',
         'features': [],

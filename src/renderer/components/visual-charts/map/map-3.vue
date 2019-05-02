@@ -6,9 +6,9 @@
 
 <script>
 require('./map-3-point-info.scss');
-const markets = require('../../lib/markets-pos.json')
+const markets = require('../../../lib/markets-pos.json')
 
-import transPosFn from '../../lib/amap-bdmap-pos-trans.js';
+import transPosFn from '../../../lib/amap-bdmap-pos-trans.js';
 
 /* eslint-disable */
 export default {
@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      marketIcon: require('../../assets/market.png')
+      marketIcon: require('../../../assets/market.png')
     };
   },
   methods: {

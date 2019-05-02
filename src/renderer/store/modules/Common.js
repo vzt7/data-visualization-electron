@@ -1,15 +1,22 @@
 export default {
   state: {
-    csvData: null,
+    stuData: null, // 学生入学数据
+    stuTermData: null, // 学生学期数据
   },
   mutations: {
-    setCsvData(state, data) {
-      state.csvData = data;
+    setStuData(state, data) {
+      state.stuData = data;
+    },
+    setStuTermData(state, data) {
+      state.stuTermData = data;
     },
   },
   actions: {
-    setCsvData(context, data) {
-      context.commit('setCsvData', data)
+    setStuData(context, data) {
+      context.commit('setStuData', data)
+    },
+    setStuTermData(context, data) {
+      context.commit('setStuTermData', data)
     },
   }
 }

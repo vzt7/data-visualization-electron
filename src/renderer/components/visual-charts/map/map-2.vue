@@ -9,7 +9,7 @@
 import G2 from '@antv/g2';
 import { View } from '@antv/data-set';
 
-import provincePosArray from '../../lib/province-pos.js';
+import transFn from './transMapFromToData.js';
 
 export default {
   name: "chart-map-2",
@@ -40,7 +40,7 @@ export default {
     };
   },
   async mounted() {
-    [this.stuFromObj, this.stuToObj, this.stuFromToArray] = await [...this.getFromToData()];
+    [this.stuFromObj, this.stuToObj, this.stuFromToArray] = [...this.getFromToData()];
     // this.setMap();
     this.$emit('update:mapSceneLoaded', true);
   },
@@ -55,38 +55,7 @@ export default {
   },
   methods: {
     getFromToData() {
-      // 获取渲染数据
-
-      // 没有就业去向的
-      const stuFromObj = {};
-      // 有就业去向的
-      const stuFromToArray = [];
-      // 有就业去向的（groupby）
-      const stuToObj = {};
-      this.$store.state.Common.csvData.map(stu => {
-        let fromPos = provincePosArray.find(prov => stu.from && stu.from.includes(prov.name));
-        let toPos = provincePosArray.find(prov => stu.to && stu.to.includes(prov.name));
-        if(fromPos && !toPos) {
-          if(stuFromObj[fromPos.name]) stuFromObj[fromPos.name].count += 1;
-          else {
-            stuFromObj[fromPos.name] = { name: fromPos.name, count: 1 };
-            stuFromObj[fromPos.name].geoCoord = fromPos.geoCoord;
-          }
-        }
-        if(fromPos && toPos) {
-          stuFromToArray.push({
-            from: fromPos.geoCoord,
-            to: toPos.geoCoord,
-          });
-          if(stuToObj[toPos.name]) stuToObj[toPos.name].count += 1;
-          else {
-            stuToObj[toPos.name] = { name: toPos.name, count: 1 };
-            stuToObj[toPos.name].geoCoord = toPos.geoCoord;
-          }
-        }
-      });
-      this.$store.dispatch('setMapData', { stuFromObj, stuFromToArray });
-      return [stuFromObj, stuToObj, stuFromToArray];
+      return transFn.call(this);
     },
     setMap(stuObj) {
       let chart = new G2.Chart({
@@ -114,7 +83,7 @@ export default {
       });
 
       // 使用mapObj映射出geoObj.features.geometry
-      let mapObj = require('../../lib/china-pos.json');
+      let mapObj = require('../../../lib/china-pos.json');
       let geoObj = {
         'type': 'FeatureCollection',
         'features': [],

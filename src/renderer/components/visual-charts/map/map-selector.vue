@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  name: "map-controller",
+  name: "map-selector",
   props: {
     selectedItems: {
       type: Array

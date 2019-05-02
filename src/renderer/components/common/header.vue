@@ -1,8 +1,8 @@
 <template>
   <Menu class="menu" mode="horizontal" theme="light" :active-name="currentRoute">
-    <MenuItem class="menu__item" name="/setting" :replace="false">
+    <!-- <MenuItem class="menu__item" name="/setting" :replace="false">
       <Icon type="ios-analytics"/>Setting
-    </MenuItem>
+    </MenuItem> -->
     <MenuItem class="menu__item" name="/visual" to="/visual" :replace="false">
       <Icon type="md-pie"/>Visual
     </MenuItem>
