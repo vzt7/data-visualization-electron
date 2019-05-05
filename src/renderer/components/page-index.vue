@@ -5,7 +5,6 @@
       <p class="index__title">
         Data<span class="index__title-force"><span class="text-offset">V</span>isuali<span class="text-offset">z</span>a<span class="text-offset">t</span>ion</span> of SCUEC
       </p>
-      <p class="index__loading">{{ '外部依赖加载中... ' + loadPercent + '%' }}</p>
     </div>
   </div>
 </template>
@@ -15,28 +14,8 @@ export default {
   name: "page-index",
   props: {},
   data() {
-    return {
-      onLoaded: false,
-      loadPercent: 0,
-    };
+    return {}
   },
-  created() {
-    window.onload = () => {
-      let fn = () => {
-        if(this.loadPercent < 100) {
-          this.loadPercent ++;
-          window.requestAnimationFrame(fn);
-        } else {
-          this.onLoaded = true;
-        }
-      }
-      window.requestAnimationFrame(fn);
-    }
-  },
-  computed: {
-  },
-  methods: {
-  }
 };
 </script>
 

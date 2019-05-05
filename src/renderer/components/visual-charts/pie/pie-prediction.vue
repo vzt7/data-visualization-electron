@@ -11,6 +11,7 @@
 import G2 from "@antv/g2";
 
 import StuSelector from './stu-selector'
+import { setTimeout } from 'timers';
 
 export default {
   name: "chart-pie-predict",
@@ -26,31 +27,39 @@ export default {
   data() {
     return {
       stuData: this.$store.state.Common.stuData,
+      predChart: null,
     };
   },
-  created() {
-    console.log(this.selectedStu);
-  },
   mounted() {
-    this.setPie();
+    this.setPie(this.selectedStu);
+  },
+  watch: {
+    selectedStu(stu) {
+      // 当前选择变化时修改数据
+      setTimeout(() => {
+        // 延迟 400ms 修改
+        this.predChart.changeData(this.initDataOfPredChart(stu));
+      }, 400);
+    }
   },
   methods: {
-    setPie() {
-      let temp = {
-      }
-      let data = [{
+    initDataOfPredChart(selectedStu) {
+      return [{
         item: '升学',
-        percent: +this.selectedStu.Promotion.toFixed(2)
+        percent: ~~(selectedStu.Promotion * 100000) / 1000,
       }, {
         item: '待就业',
-        percent: +this.selectedStu.Unemployment.toFixed(2)
+        percent: ~~(selectedStu.Unemployment * 100000) / 1000,
       }, {
         item: '签约就业',
-        percent: +this.selectedStu.EmploymentWithContract.toFixed(2)
+        percent: ~~(selectedStu.EmploymentWithContract * 100000) / 1000,
       }, {
         item: '未签约就业',
-        percent: +this.selectedStu.EmploymentWithoutContract.toFixed(2)
+        percent: ~~(selectedStu.EmploymentWithoutContract * 100000) / 1000,
       }];
+    },
+    setPie(selectedStu) {
+      let data = this.initDataOfPredChart(selectedStu);
       let chart = new G2.Chart({
         container: 'pie-container',
         forceFit: true,
@@ -59,8 +68,8 @@ export default {
       chart.source(data, {
         percent: {
           formatter: function formatter(val) {
-            val = val * 100 + '%';
-            return val;
+            // val = val * 100 + '%';
+            return val.toFixed(2) + '%';
           }
         }
       });
@@ -76,10 +85,9 @@ export default {
           return item.point.item + ': ' + val;
         }
       }).tooltip('item*percent', function(item, percent) {
-        percent = percent * 100 + '%';
         return {
           name: item,
-          value: percent
+          value: percent + '%'
         };
       }).style({
         lineWidth: 1,
@@ -87,6 +95,7 @@ export default {
       });
       chart.render();
       // interval.setSelected(data[1]);
+      this.predChart = chart;
     }
   }
 };

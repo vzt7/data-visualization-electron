@@ -1,6 +1,6 @@
 <template>
   <div class="stu-selector">
-    <Select filterable @on-change="onSelect" :value="0">
+    <Select filterable @on-change="onSelect" :value="currentIndex">
       <Option
         v-for="(item, index) in stuData"
         :value="index"
@@ -19,6 +19,11 @@ export default {
       default: () => {},
     }
   },
+  data() {
+    return {
+      currentIndex: 0,
+    }
+  },
   computed: {
     stuData() {
       return this.$store.state.Common.stuData;
@@ -26,6 +31,7 @@ export default {
   },
   methods: {
     onSelect(index) {
+      this.currentIndex = index;
       this.$emit('update:selectedStu', this.stuData[index]);
     }
   }

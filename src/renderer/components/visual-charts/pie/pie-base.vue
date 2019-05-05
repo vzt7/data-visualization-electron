@@ -68,7 +68,7 @@ export default {
         .intervalStack()
         .position("percent")
         .color("item")
-        .label("percent", {
+        .label("count", {
           formatter: function formatter(val, item) {
             return item.point.item + ": " + val;
           }

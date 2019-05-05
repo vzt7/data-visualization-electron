@@ -5,7 +5,7 @@
         <Icon type="ios-analytics"/>Base
       </template>
       <MenuGroup title="统计相关">
-        <MenuItem name="1-1-1">Stu Info</MenuItem>
+        <MenuItem name="1-1-1">Info</MenuItem>
         <MenuItem name="1-1-2">Prediction</MenuItem>
       </MenuGroup>
       <MenuGroup title="就业去向">

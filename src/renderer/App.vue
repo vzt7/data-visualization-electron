@@ -27,19 +27,38 @@ export default {
   created() {
     this.getData();
   },
+  mounted() {
+    this.checkAMap();
+  },
   methods: {
-    getData() {
+    async getData() {
       this.$Notice.info({
-        title: "等待",
-        desc: `加载数据中`
+        // name: 'loading',
+        title: "数据装载中...",
+        // duration: 0,
       });
       // 读取数据，数据暂存在vuex
-      this.$store.commit("setStuData", Object.values(data.stuData))
-      this.$store.commit("setMapData", Object.values(data.mapData))
-      this.$Notice.success({
-        title: "成功",
-        desc: `已加载数据`
-      });
+      await this.$store.commit("setStuData", Object.values(data.stuData).sort((a, b) => b.Unemployment - a.Unemployment)); // 以待就业概率降序排序
+      await this.$store.commit("setMapData", Object.values(data.mapData));
+      this.$Notice.success({ title: "数据已装载" });
+    },
+    checkAMap() {
+      let timeNow = Date.now();
+      let checker = setInterval(() => {
+        if(window.AMap) {
+          // 高德地图加载完成
+          clearInterval(checker);
+          this.$Notice.success({ title: "高德地图已装载" });
+        }
+        if(Date.now() - timeNow > (20 * 1000) && !window.AMap) {
+          // 高德地图超过 20s 未加载完成
+          this.$Notice.error({
+            title: "高德地图加载失败",
+            desc: `请检查网络`
+          });
+        }
+      }, 1000);
+      return checker;
     },
   }
 };

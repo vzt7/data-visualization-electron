@@ -5,6 +5,9 @@
 </template>
 
 <script>
+import * as L7 from '@antv/l7';
+import * as turf from '@turf/turf';
+
 import transFn from './transMapFromToData.js';
 
 /* eslint-disable */
@@ -76,7 +79,7 @@ export default {
       return transFn.call(this);
     },
     setMap() {
-      // L7 和 turf 等地图相关依赖从 index.html / script标签 引入
+      // L7 依赖高德地图（index.ejs - script引入）
       const scene = new L7.Scene({
         id: 'map',
         mapStyle: 'light',

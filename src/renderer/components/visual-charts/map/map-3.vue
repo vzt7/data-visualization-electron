@@ -8,9 +8,9 @@
 require('./map-3-point-info.scss');
 const markets = require('../../../lib/markets-pos.json')
 
+// import AMap from 'AMap'; // 从 index.edj - script 引入
 import transPosFn from '../../../lib/amap-bdmap-pos-trans.js';
 
-/* eslint-disable */
 export default {
   name: "chart-map-3",
   props: {
