@@ -2,9 +2,10 @@
 
 某校大学生相关数据可视化
 
+
 ## Tech Stack / Libs
 
-> Front-End
+Front-End :
 
 - Webpack - 打包&工程化
 - Vue.js - MVVM框架
@@ -16,8 +17,9 @@
 - turf.js - 空间关系库
 - scss - CSS预处理
 
+
 ## Directory Tree
-<pre>
+```
 📦 data-visualization-electron
  ┣ 📂.electron-vue
  ┃ ┗ *一些打包配置
@@ -54,9 +56,12 @@
  ┣ 📜package.json *依赖列表&项目信息
  ┣ 📜README-electron.md
  ┗ 📜README.md
-</pre>
+```
+
 
 ## Build Up
+
+需要安装 npm ([Node.js](https://nodejs.org/en/)自带)，install 过慢可以使用 [cnpm](http://npm.taobao.org/)
 
 ``` bash
 # 安装依赖
